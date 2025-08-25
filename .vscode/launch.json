@@ -1,0 +1,25 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "🔧 Current Work Directory",
+			"type": "go",
+			"request": "launch",
+			"mode": "debug",
+			"program": "${fileDirname}",
+			"cwd": "${fileDirname}",
+			"console": "integratedTerminal"
+		},
+		{
+			"name": "📝 Work1 - Word Counter",
+			"type": "go",
+			"request": "launch",
+			"mode": "debug",
+			"program": "${workspaceFolder}/work1",
+			"cwd": "${workspaceFolder}/work1",
+			"args": [
+				"--file=chehov.txt"
+			]
+		}
+	]
+}
