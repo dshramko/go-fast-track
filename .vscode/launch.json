@@ -20,6 +20,17 @@
 			"args": [
 				"--file=chehov.txt"
 			]
+		},
+		{
+			"name": "📝 Work2 - JSON parser",
+			"type": "go",
+			"request": "launch",
+			"mode": "debug",
+			"program": "${workspaceFolder}/work2",
+			"cwd": "${workspaceFolder}/work2",
+			"args": [
+				"--keys=id,total_amount,paid,customer.name,customer.address.street"
+			]
 		}
 	]
 }
