@@ -29,6 +29,7 @@
 			"program": "${workspaceFolder}/work2",
 			"cwd": "${workspaceFolder}/work2",
 			"args": [
+				"--file=order.json",
 				"--keys=id,total_amount,paid,customer.name,customer.address.street"
 			]
 		}

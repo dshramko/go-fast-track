@@ -4,17 +4,15 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"log/slog"
 	"os"
 	"strings"
 )
 
-var (
-	keys = flag.String("keys", "", "keys to extract from JSON. Comma-separated. Use dot for nested keys, key.subkey")
-	file = flag.String("file", "", "JSON file to read")
-	help = flag.Bool("help", false, "show usage")
-)
-
 func main() {
+	keys := flag.String("keys", "", "keys to extract from JSON. Comma-separated. Use dot for nested keys, key.subkey")
+	file := flag.String("file", "", "JSON file to read")
+	help := flag.Bool("help", false, "show usage")
 	flag.Parse()
 
 	if *file == "" || *help {
@@ -24,14 +22,14 @@ func main() {
 
 	data, err := os.ReadFile(*file)
 	if err != nil {
-		fmt.Println("Error reading JSON file:", err)
+		slog.Error("Error reading JSON file", "err", err)
 		os.Exit(1)
 	}
 
 	var payload map[string]any
 	err = json.Unmarshal(data, &payload)
 	if err != nil {
-		fmt.Println("Error parsing JSON file:", err)
+		slog.Error("Error parsing JSON file:", "err", err)
 		os.Exit(1)
 	}
 
@@ -64,15 +62,16 @@ func keysPrint(obj map[string]any, requestedKeys []string) {
 func getNestedValue(obj any, keys []string) (any, bool) {
 	current := obj
 	for _, key := range keys {
-		m, ok := current.(map[string]any)
-		if !ok {
+		switch v := current.(type) {
+		case map[string]any:
+			val, exists := v[key]
+			if !exists {
+				return nil, false
+			}
+			current = val
+		default:
 			return nil, false
 		}
-		val, exists := m[key]
-		if !exists {
-			return nil, false
-		}
-		current = val
 	}
 	return current, true
 }
