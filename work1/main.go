@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"log/slog"
 	"os"
 	"regexp"
 	"sort"
@@ -18,11 +19,8 @@ type WordCounter struct {
 
 const minWordLength = 4
 
-var (
-	filename = flag.String("file", "", "file to read")
-)
-
 func main() {
+	filename := flag.String("file", "", "file to read")
 	flag.Parse()
 
 	if *filename == "" {
@@ -32,8 +30,8 @@ func main() {
 
 	words, err := getWordsFromFile(*filename)
 	if err != nil {
-		fmt.Println("Error reading file:", err)
-		os.Exit(1)
+		slog.Error("Error reading file", "error", err)
+		return
 	}
 
 	topWords := getTopWords(words, 10)
@@ -56,7 +54,7 @@ func printTopWords(topWords []WordCounter) {
 func getWordsFromFile(filename string) (map[string]int, error) {
 	file, err := os.Open(filename)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not open file: %w", err)
 	}
 	defer file.Close()
 
