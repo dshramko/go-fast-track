@@ -17,6 +17,15 @@ type WordCounter struct {
 	count int
 }
 
+type ReadFileError struct {
+	msg string
+	err error
+}
+
+func (e ReadFileError) Error() string {
+	return fmt.Sprintf("%s: %v", e.msg, e.err)
+}
+
 const minWordLength = 4
 
 func main() {
@@ -54,7 +63,7 @@ func printTopWords(topWords []WordCounter) {
 func getWordsFromFile(filename string) (map[string]int, error) {
 	file, err := os.Open(filename)
 	if err != nil {
-		return nil, fmt.Errorf("could not open file: %w", err)
+		return nil, ReadFileError{msg: "could not open file", err: err}
 	}
 	defer file.Close()
 
@@ -76,7 +85,7 @@ func getWordsFromFile(filename string) (map[string]int, error) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return nil, fmt.Errorf("error reading file: %w", err)
+		return nil, ReadFileError{msg: "error reading file", err: err}
 	}
 
 	return wordCount, nil
